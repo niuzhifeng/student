@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.student.mapper.PeStudentMapper" >
+    <resultMap id="BaseResultMap" type="com.student.bean.PeStudent" >
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="login_id" property="loginId" jdbcType="VARCHAR" />
+        <result column="password" property="password" jdbcType="VARCHAR" />
+        <result column="phone" property="phone" jdbcType="VARCHAR" />
+        <result column="email" property="email" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id, login_id, password, phone, email
+    </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from pe_student
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectByLoginId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from pe_student
+        where login_id = #{loginId,jdbcType=VARCHAR}
+    </select>
+    
+    <!-- 登录验证 开始-->
+    <select id="authLogin" resultMap="BaseResultMap" parameterType="com.student.bean.PeStudent" >
+        select
+        <include refid="Base_Column_List" />
+        from pe_student
+        where
+          login_id = #{loginId,jdbcType=VARCHAR}
+        AND password = #{password,jdbcType=VARCHAR}
+    </select>
+    <!-- 登录验证 结束-->
+    
+    <select id="selectAllPeStudent" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from pe_student
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from pe_student
+        where id = #{id,jdbcType=VARCHAR}
+    </delete>
+
+    <insert id="insert" parameterType="com.student.bean.PeStudent" >
+        insert into pe_student
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null and id != '' " >
+                id,
+            </if>
+            <if test="loginId != null and loginId != '' " >
+                login_id,
+            </if>
+            <if test="password != null and password != '' " >
+                password,
+            </if>
+            <if test="phone != null and phone != '' " >
+                phone,
+            </if>
+            <if test="email != null and email != '' " >
+                email,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null and id != '' " >
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="loginId != null and loginId != '' " >
+                #{loginId,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null and password != '' " >
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null and phone != '' " >
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null and email != '' " >
+                #{email,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKey" parameterType="com.student.bean.PeStudent" >
+        update pe_student
+        <set>
+            <if test="loginId != null and loginId != '' " >
+                login_id = #{loginId,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null and password != '' " >
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null and phone != '' " >
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null and email != '' " >
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+</mapper>

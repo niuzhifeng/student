@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.student.mapper.DataCheckMapper">
+    <!-- 查询数据库是否存在 -->
+    <select id="getDb" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT SCHEMATA.SCHEMA_NAME from information_schema.SCHEMATA where SCHEMATA.SCHEMA_NAME = #{dbName,jdbcType=VARCHAR}
+    </select>
+
+    <!-- 查询数据表是否存在 -->
+    <select id="getTable" parameterType="java.lang.String" resultType="java.util.HashMap">
+        SELECT * FROM information_schema.TABLES WHERE TABLES.TABLE_NAME = #{tableName,jdbcType=VARCHAR}
+    </select>
+
+    <!-- 查询数据表的列 -->
+    <select id="getColums" parameterType="java.lang.String" resultType="java.lang.String">
+         SELECT
+            COLUMNS.COLUMN_NAME
+         FROM
+            information_schema.COLUMNS
+         where
+            COLUMNS.TABLE_NAME = '${tableName}'
+         <if test="columns != null and columns.size() > 0">
+             AND COLUMNS.COLUMN_NAME in 
+             <foreach collection="columns" item="column" open="(" close=")" separator=",">
+                 '${column}'
+             </foreach>
+         </if>
+    </select>
+
+    <!-- 获取表数据 -->
+    <select id="mapByTableName" resultType="java.util.HashMap">
+       SELECT
+          <foreach collection="columns" item="column" open="" close="" separator=",">
+             ${column}
+          </foreach>
+       FROM
+          ${tableName}
+       WHERE
+          1 = 1
+          <if test="condition != null and condition.size() > 0">
+            <foreach collection="condition.keys" item="key" open="" close="" separator="">
+                and ${key} = '${condition[key]}'
+            </foreach>
+          </if>
+    </select>
+</mapper>

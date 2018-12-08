@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: student
+  cloud:
+    config:
+      label: master
+      profile: {spring.profiles.active}
+      uri: http://localhost:1260
+      username: niuzhifeng
+      password: nzf19920126
+
+#eureka配置(服务提供者)
+eureka:
+  instance:
+    appname: student
+    instance-id: student
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 5
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:7777/eureka/,http://127.0.0.1:8888/eureka/
+    healthcheck:
+      enabled: true
+
+#hystrix监控配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: hystrix.stream
+      base-path: /actuator
+hystrix:
+  metrics:
+    enabled: true
